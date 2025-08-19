@@ -274,7 +274,7 @@ export default function QuestionDetailPage() {
               width: "100%",
             }}
           >
-            {answers.map((answer, index) => (
+            {answers.map((answer) => (
               <div key={answer.id} className="card">
                 <div
                   className="card-content"

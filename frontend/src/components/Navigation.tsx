@@ -1,4 +1,3 @@
-import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useGetProfileQuery, useLogoutMutation } from "../store/authApi";
 import styled from "styled-components";

@@ -4,7 +4,6 @@ import Layout from "../components/Layout";
 
 export default function QuestionsPage() {
   const { data: questionsData, isLoading, error } = useGetQuestionsQuery();
-  const isLoggedIn = !!localStorage.getItem("token");
 
   if (isLoading) {
     return (
@@ -62,6 +61,14 @@ export default function QuestionsPage() {
       .filter((tag) => tag.length > 0);
   };
 
+  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.currentTarget.style.color = "#0056b3";
+  };
+
+  const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.currentTarget.style.color = "#007bff";
+  };
+
   return (
     <Layout>
       <div className="page-container">
@@ -111,8 +118,8 @@ export default function QuestionsPage() {
                       cursor: "pointer",
                       transition: "color 0.2s ease",
                     }}
-                    onMouseEnter={(e) => (e.target.style.color = "#0056b3")}
-                    onMouseLeave={(e) => (e.target.style.color = "#007bff")}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
                   >
                     {question.title}
                   </div>

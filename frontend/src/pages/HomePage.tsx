@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useGetProfileQuery, useLogoutMutation } from "../store/authApi";
+import { useGetProfileQuery } from "../store/authApi";
 import Layout from "../components/Layout";
 import QuestionsPage from "./QuestionsPage";
 
@@ -7,16 +7,6 @@ export default function HomePage() {
   const { data: profileData, isLoading } = useGetProfileQuery(undefined, {
     skip: !localStorage.getItem("token"),
   });
-  const [logout] = useLogoutMutation();
-
-  const handleLogout = async () => {
-    try {
-      await logout().unwrap();
-      window.location.reload();
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
 
   const isLoggedIn = !!localStorage.getItem("token");
 
