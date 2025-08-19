@@ -8,12 +8,6 @@ import {
 import { useCreateQuestionMutation } from "../store/questionsApi";
 import Layout from "../components/Layout";
 
-interface FormData {
-  title: string;
-  content: string;
-  tags: string;
-}
-
 export default function CreateQuestionPage() {
   const navigate = useNavigate();
   const [createQuestion, { isLoading, error }] = useCreateQuestionMutation();
@@ -22,7 +16,7 @@ export default function CreateQuestionPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<CreateQuestionRequest>({
     resolver: zodResolver(createQuestionSchema),
     defaultValues: {
       title: "",
@@ -31,7 +25,7 @@ export default function CreateQuestionPage() {
     },
   });
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: CreateQuestionRequest) => {
     try {
       const questionData: CreateQuestionRequest = {
         ...data,
