@@ -6,7 +6,7 @@ export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl:
       process.env.NODE_ENV === "production"
-        ? "ivthac-production.up.railway.app"
+        ? "https://your-backend-url.railway.app/" // נעדכן את זה בהמשך
         : "http://localhost:3001/",
     prepareHeaders: (headers, { getState }) => {
       const token = localStorage.getItem("token");
@@ -27,6 +27,3 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(api.middleware),
 });
-
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
