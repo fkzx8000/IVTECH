@@ -10,7 +10,16 @@ const app = express();
 const PORT = env.PORT;
 
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173", // לפיתוח מקומי
+      "http://localhost:3000", // לפיתוח מקומי
+      "https://http://discerning-energy-production.up.railway.app", // החלף עם ה-URL של הFrontend
+    ],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 // Health check
