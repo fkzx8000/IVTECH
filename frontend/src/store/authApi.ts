@@ -18,7 +18,7 @@ export const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation<AuthResponse, LoginRequest>({
       query: (credentials) => ({
-        url: "/auth/login",
+        url: "/login",
         method: "POST",
         body: credentials,
       }),
@@ -34,7 +34,7 @@ export const authApi = api.injectEndpoints({
     }),
     register: builder.mutation<AuthResponse, RegisterRequest>({
       query: (userData) => ({
-        url: "/auth/register",
+        url: "/register",
         method: "POST",
         body: userData,
       }),
@@ -49,7 +49,7 @@ export const authApi = api.injectEndpoints({
       },
     }),
     getProfile: builder.query<{ user: User }, void>({
-      query: () => "/auth/userInfo",
+      query: () => "/userInfo",
       providesTags: ["User"],
     }),
     logout: builder.mutation<void, void>({
