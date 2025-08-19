@@ -21,18 +21,21 @@ export const register = async (req: Request, res: Response) => {
     const validatedData = registerSchema.parse(req.body);
     const { email, password, name, nickname } = validatedData;
 
-    // בדיקה אם המשתמש כבר קיים
-    const [existingUser] = await (
-      await db
-    ).execute("SELECT id FROM users WHERE email = ?", [email]);
+    // בדיקה אם המשתמש כבר קיים (אימייל)
+    const [existingUser] = await db.execute(
+      "SELECT id FROM users WHERE email = ?",
+      [email]
+    );
 
     if ((existingUser as any[]).length > 0) {
       return res.status(400).json({ message: "משתמש עם אימייל זה כבר קיים" });
     }
 
-    const [existingUserNickname] = await (
-      await db
-    ).execute("SELECT id FROM users WHERE nickname = ?", [nickname]);
+    // בדיקה אם המשתמש כבר קיים (כינוי)
+    const [existingUserNickname] = await db.execute(
+      "SELECT id FROM users WHERE nickname = ?",
+      [nickname]
+    );
 
     if ((existingUserNickname as any[]).length > 0) {
       return res
@@ -44,9 +47,7 @@ export const register = async (req: Request, res: Response) => {
     const hashedPassword = hashPassword(password);
 
     // יצירת המשתמש בבסיס הנתונים
-    const [result] = await (
-      await db
-    ).execute(
+    const [result] = await db.execute(
       "INSERT INTO users (email, password, name, nickname, created_at) VALUES (?, ?, ?, ?, NOW())",
       [email, hashedPassword, name, nickname]
     );
@@ -84,9 +85,7 @@ export const login = async (req: Request, res: Response) => {
     const { email, password } = validatedData;
 
     // בדיקה אם המשתמש קיים
-    const [users] = await (
-      await db
-    ).execute(
+    const [users] = await db.execute(
       "SELECT id, email, password, name, nickname FROM users WHERE email = ?",
       [email]
     );
@@ -132,9 +131,7 @@ export const getProfile = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user.userId;
 
-    const [users] = await (
-      await db
-    ).execute(
+    const [users] = await db.execute(
       "SELECT id, email, name, nickname, created_at FROM users WHERE id = ?",
       [userId]
     );
