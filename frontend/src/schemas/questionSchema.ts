@@ -6,7 +6,7 @@ export const createQuestionSchema = z.object({
     .min(5, "כותרת חייבת להכיל לפחות 5 תווים")
     .max(255, "כותרת ארוכה מדי"),
   content: z.string().min(10, "תוכן השאלה חייב להכיל לפחות 10 תווים"),
-  tags: z.string().default(""),
+  tags: z.string().optional().default(""),
 });
 
 export type CreateQuestionRequest = z.infer<typeof createQuestionSchema>;
