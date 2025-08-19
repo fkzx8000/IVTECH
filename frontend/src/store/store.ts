@@ -6,7 +6,7 @@ export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl:
       process.env.NODE_ENV === "production"
-        ? "https://http://ivthac-production-a027.up.railway.app/" // נעדכן את זה בהמשך
+        ? "https://ivthac-production-a027.up.railway.app/" // החלף עם ה-URL האמיתי מהשלב הקודם
         : "http://localhost:3001/",
     prepareHeaders: (headers, { getState }) => {
       const token = localStorage.getItem("token");

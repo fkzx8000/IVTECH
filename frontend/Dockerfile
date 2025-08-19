@@ -5,7 +5,7 @@ WORKDIR /app
 
 # העתקת package.json ו package-lock.json
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 
 # העתקת קוד המקור
 COPY . .
@@ -19,8 +19,8 @@ FROM nginx:alpine
 # העתקת הקבצים הבנויים לנינג'קס
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# העתקת הגדרות nginx (אופציונלי)
-COPY nginx.conf /etc/nginx/conf.d/default.conf 2>/dev/null || echo "No custom nginx.conf found, using default"
+# העתקת הגדרות nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
