@@ -1,9 +1,9 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { loginSchema, type LoginRequest } from "../schemas/userSchema";
 import { useLoginMutation } from "../store/authApi";
-import styled from "styled-components";
+import Layout from "../components/Layout";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -20,36 +20,29 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginRequest) => {
     try {
       await login(data).unwrap();
-      navigate("/"); // מעבר לדף הבית לאחר התחברות מוצלחת
+      navigate("/");
     } catch (err) {
       console.error("Login failed:", err);
     }
   };
 
   return (
-    <>
+    <Layout showNavigation={false}>
       <form className="form" onSubmit={handleSubmit(onSubmit)}>
         {error && (
-          <div
-            style={{
-              color: "red",
-              marginBottom: "1rem",
-              padding: "0.5rem",
-              border: "1px solid red",
-              borderRadius: "4px",
-              backgroundColor: "#ffe6e6",
-            }}
-          >
+          <div className="error-message">
             {"data" in error
               ? (error.data as any)?.message || "שגיאה בהתחברות"
               : "שגיאה בהתחברות"}
           </div>
         )}
+
         <div className="title">
           דף התחברות
           <br />
-          <span>בוא לשאול שאלות, לקבל תשוב והכי חשוב להיות חלק מקהילה</span>
+          <span>בוא לשאול שאלות, לקבל תשובות והכי חשוב להיות חלק מקהילה</span>
         </div>
+
         <input
           {...register("email")}
           className="input"
@@ -63,6 +56,7 @@ export default function LoginPage() {
             {errors.email.message}
           </span>
         )}
+
         <input
           {...register("password")}
           disabled={isLoading}
@@ -76,11 +70,11 @@ export default function LoginPage() {
             {errors.password.message}
           </span>
         )}
+
         <button className="button-confirm" type="submit" disabled={isLoading}>
-          {isLoading ? "מתחבר..." : "התחברות"} →
+          {isLoading ? "מתחבר..." : "התחברות"}
         </button>
 
-        {/* פוטר מוצמד לתחתית הטופס */}
         <div className="form-footer">
           <button
             type="button"
@@ -100,6 +94,6 @@ export default function LoginPage() {
           </button>
         </div>
       </form>
-    </>
+    </Layout>
   );
 }

@@ -9,6 +9,7 @@ import {
   createAnswerSchema,
   type CreateAnswerRequest,
 } from "../schemas/answerSchema";
+import Layout from "../components/Layout";
 
 export default function QuestionDetailPage() {
   const { questionId } = useParams<{ questionId: string }>();
@@ -66,7 +67,7 @@ export default function QuestionDetailPage() {
         question_id: questionIdNumber,
       };
       await createAnswer(answerData).unwrap();
-      reset(); // איפוס הטופס לאחר שליחה מוצלחת
+      reset();
     } catch (err) {
       console.error("Create answer failed:", err);
     }
@@ -74,284 +75,229 @@ export default function QuestionDetailPage() {
 
   if (!questionId || isNaN(questionIdNumber)) {
     return (
-      <div style={{ padding: "2rem", textAlign: "center" }}>
-        <h1>שגיאה</h1>
-        <p>מזהה שאלה לא תקין</p>
-        <Link to="/questions">חזרה לרשימת השאלות</Link>
-      </div>
+      <Layout>
+        <div className="page-container">
+          <div className="page-header">
+            <h1 className="page-title">שגיאה</h1>
+            <p className="page-subtitle">מזהה שאלה לא תקין</p>
+            <div style={{ marginTop: "1.5rem" }}>
+              <Link to="/questions" className="styled-button">
+                חזרה לרשימת השאלות
+              </Link>
+            </div>
+          </div>
+        </div>
+      </Layout>
     );
   }
 
   if (isLoading) {
     return (
-      <div style={{ padding: "2rem", textAlign: "center" }}>
-        <p>טוען שאלה...</p>
-      </div>
+      <Layout>
+        <div className="page-container">
+          <div className="page-header">
+            <h1 className="page-title">טוען שאלה...</h1>
+          </div>
+        </div>
+      </Layout>
     );
   }
 
   if (error) {
     return (
-      <div style={{ padding: "2rem", textAlign: "center" }}>
-        <h1>שגיאה</h1>
-        <p style={{ color: "red" }}>שגיאה בטעינת השאלה</p>
-        <button onClick={() => navigate("/questions")}>
-          חזרה לרשימת השאלות
-        </button>
-      </div>
+      <Layout>
+        <div className="page-container">
+          <div className="page-header">
+            <h1 className="page-title">שגיאה בטעינת השאלה</h1>
+            <div style={{ marginTop: "1.5rem" }}>
+              <button
+                onClick={() => navigate("/questions")}
+                className="styled-button"
+              >
+                חזרה לרשימת השאלות
+              </button>
+            </div>
+          </div>
+        </div>
+      </Layout>
     );
   }
 
   if (!questionData) {
     return (
-      <div style={{ padding: "2rem", textAlign: "center" }}>
-        <h1>שאלה לא נמצאה</h1>
-        <Link to="/questions">חזרה לרשימת השאלות</Link>
-      </div>
+      <Layout>
+        <div className="page-container">
+          <div className="page-header">
+            <h1 className="page-title">שאלה לא נמצאה</h1>
+            <div style={{ marginTop: "1.5rem" }}>
+              <Link to="/questions" className="styled-button">
+                חזרה לרשימת השאלות
+              </Link>
+            </div>
+          </div>
+        </div>
+      </Layout>
     );
   }
 
   const { question, answers } = questionData;
 
   return (
-    <div style={{ padding: "2rem", maxWidth: "800px", margin: "0 auto" }}>
-      {/* כותרת העמוד */}
-      <div style={{ marginBottom: "2rem" }}>
-        <Link to="/questions">← חזרה לרשימת השאלות</Link>
-      </div>
+    <Layout>
+      <div className="page-container">
+        {/* השאלה */}
+        <div className="card" style={{ border: "3px solid #007bff" }}>
+          <h1
+            className="card-title"
+            style={{ fontSize: "24px", marginBottom: "1.5rem" }}
+          >
+            {question.title}
+          </h1>
 
-      {/* השאלה */}
-      <div
-        style={{
-          border: "2px solid #007bff",
-          borderRadius: "8px",
-          padding: "2rem",
-          backgroundColor: "#f8f9fa",
-          marginBottom: "2rem",
-        }}
-      >
-        <h1 style={{ margin: "0 0 1rem 0", color: "#333" }}>
-          {question.title}
-        </h1>
+          <div
+            className="card-content"
+            style={{
+              whiteSpace: "pre-wrap",
+              fontSize: "16px",
+              lineHeight: "1.8",
+            }}
+          >
+            {question.content}
+          </div>
 
-        <div
-          style={{
-            marginBottom: "1rem",
-            lineHeight: "1.6",
-            color: "#555",
-            whiteSpace: "pre-wrap",
-            fontSize: "1.1rem",
-          }}
-        >
-          {question.content}
+          {/* תגיות */}
+          {formatTags(question.tags) && (
+            <div style={{ margin: "1rem 0" }}>
+              {formatTags(question.tags)!.map((tag, index) => (
+                <span key={index} className="tag">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* מידע על המשתמש והתאריך */}
+          <div className="card-footer">
+            <div>
+              נשאל על ידי: <strong>{question.user_name}</strong> (@
+              {question.user_nickname})
+            </div>
+            <div>{formatDate(question.created_at)}</div>
+          </div>
         </div>
 
-        {/* תגיות */}
-        {formatTags(question.tags) && (
-          <div style={{ marginBottom: "1rem" }}>
-            {formatTags(question.tags)!.map((tag, index) => (
-              <span
-                key={index}
-                style={{
-                  display: "inline-block",
-                  backgroundColor: "#e9ecef",
-                  color: "#495057",
-                  padding: "0.25rem 0.5rem",
-                  margin: "0.25rem 0.25rem 0.25rem 0",
-                  borderRadius: "12px",
-                  fontSize: "0.8rem",
-                  border: "1px solid #ced4da",
-                }}
-              >
-                {tag}
-              </span>
-            ))}
+        {/* כותרת התשובות */}
+        <div className="page-header" style={{ marginTop: "2rem" }}>
+          <h2 className="page-title">תשובות ({answers.length})</h2>
+        </div>
+
+        {/* טופס הוספת תשובה */}
+        {isLoggedIn ? (
+          <div className="content-form">
+            <h3 style={{ margin: "0 0 0 0", color: "var(--font-color)" }}>
+              הוסף תשובה
+            </h3>
+
+            {createError && (
+              <div className="error-message">
+                {"data" in createError
+                  ? (createError.data as any)?.message || "שגיאה ביצירת התשובה"
+                  : "שגיאה ביצירת התשובה"}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="form-group">
+                <textarea
+                  {...register("content")}
+                  placeholder="כתוב את התשובה שלך כאן..."
+                  rows={4}
+                  className="form-textarea"
+                  disabled={isCreatingAnswer}
+                />
+                {errors.content && (
+                  <span
+                    className="error-message"
+                    style={{ fontSize: "0.8rem", padding: "0.3rem" }}
+                  >
+                    {errors.content.message}
+                  </span>
+                )}
+
+                <button
+                  type="submit"
+                  className="styled-button green"
+                  disabled={isCreatingAnswer}
+                  style={{ alignSelf: "flex-start" }}
+                >
+                  {isCreatingAnswer ? "שולח תשובה..." : "שלח תשובה"}
+                </button>
+              </div>
+            </form>
+          </div>
+        ) : (
+          <div className="card">
+            <div className="card-content" style={{ textAlign: "center" }}>
+              <p>עליך להיות מחובר כדי לענות על השאלה</p>
+            </div>
+            <div style={{ textAlign: "center", marginTop: "1rem" }}>
+              <Link to="/login" className="styled-button">
+                התחברות
+              </Link>
+            </div>
           </div>
         )}
 
-        {/* מידע על המשתמש והתאריך */}
-        <div
-          style={{
-            borderTop: "1px solid #ddd",
-            paddingTop: "1rem",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            fontSize: "0.9rem",
-            color: "#666",
-          }}
-        >
-          <div>
-            נשאל על ידי: <strong>{question.user_name}</strong> (@
-            {question.user_nickname})
+        {/* רשימת התשובות */}
+        {answers.length === 0 ? (
+          <div className="card">
+            <div className="card-content" style={{ textAlign: "center" }}>
+              <p>
+                <strong>עדיין לא נענתה אף תשובה לשאלה זו</strong>
+              </p>
+              {!isLoggedIn && (
+                <p>
+                  <Link to="/login" style={{ color: "#007bff" }}>
+                    התחבר
+                  </Link>{" "}
+                  כדי לענות על השאלה
+                </p>
+              )}
+            </div>
           </div>
-          <div>{formatDate(question.created_at)}</div>
-        </div>
-      </div>
-
-      {/* כותרת התשובות */}
-      <h2 style={{ borderBottom: "2px solid #ddd", paddingBottom: "0.5rem" }}>
-        תשובות ({answers.length})
-      </h2>
-
-      {/* טופס הוספת תשובה */}
-      {isLoggedIn ? (
-        <div
-          style={{
-            border: "1px solid #ddd",
-            borderRadius: "8px",
-            padding: "1.5rem",
-            backgroundColor: "#f9f9f9",
-            marginBottom: "2rem",
-          }}
-        >
-          <h3 style={{ margin: "0 0 1rem 0" }}>הוסף תשובה</h3>
-
-          {createError && (
-            <div
-              style={{
-                color: "red",
-                marginBottom: "1rem",
-                padding: "0.5rem",
-                border: "1px solid red",
-                borderRadius: "4px",
-                backgroundColor: "#ffe6e6",
-              }}
-            >
-              {"data" in createError
-                ? (createError.data as any)?.message || "שגיאה ביצירת התשובה"
-                : "שגיאה ביצירת התשובה"}
-            </div>
-          )}
-
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "1.5rem",
+              width: "100%",
+            }}
           >
-            <textarea
-              {...register("content")}
-              placeholder="כתוב את התשובה שלך כאן..."
-              rows={4}
-              style={{
-                width: "100%",
-                padding: "0.7rem",
-                fontSize: "1rem",
-                resize: "vertical",
-                minHeight: "100px",
-                border: "1px solid #ccc",
-                borderRadius: "4px",
-              }}
-              disabled={isCreatingAnswer}
-            />
-            {errors.content && (
-              <span style={{ color: "red", fontSize: "0.8rem" }}>
-                {errors.content.message}
-              </span>
-            )}
-
-            <button
-              type="submit"
-              style={{
-                padding: "0.8rem",
-                fontSize: "1rem",
-                backgroundColor: "#28a745",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer",
-                maxWidth: "200px",
-              }}
-              disabled={isCreatingAnswer}
-            >
-              {isCreatingAnswer ? "שולח תשובה..." : "שלח תשובה"}
-            </button>
-          </form>
-        </div>
-      ) : (
-        <div
-          style={{
-            textAlign: "center",
-            padding: "1.5rem",
-            border: "1px solid #ddd",
-            borderRadius: "8px",
-            backgroundColor: "#f9f9f9",
-            marginBottom: "2rem",
-          }}
-        >
-          <p>עליך להיות מחובר כדי לענות על השאלה</p>
-          <Link to="/login">
-            <button
-              style={{
-                backgroundColor: "#007bff",
-                color: "white",
-                border: "none",
-                padding: "0.7rem 1.5rem",
-                borderRadius: "4px",
-                cursor: "pointer",
-              }}
-            >
-              התחברות
-            </button>
-          </Link>
-        </div>
-      )}
-
-      {/* רשימת התשובות */}
-      {answers.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "2rem" }}>
-          <p>עדיין לא נענתה אף תשובה לשאלה זו</p>
-          {!isLoggedIn && (
-            <p>
-              <Link to="/login">התחבר</Link> כדי לענות על השאלה
-            </p>
-          )}
-        </div>
-      ) : (
-        <div
-          style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}
-        >
-          {answers.map((answer, index) => (
-            <div
-              key={answer.id}
-              style={{
-                border: "1px solid #ddd",
-                borderRadius: "8px",
-                padding: "1.5rem",
-                backgroundColor: index % 2 === 0 ? "#ffffff" : "#f8f9fa",
-              }}
-            >
-              <div
-                style={{
-                  marginBottom: "1rem",
-                  lineHeight: "1.6",
-                  color: "#555",
-                  whiteSpace: "pre-wrap",
-                }}
-              >
-                {answer.content}
-              </div>
-
-              <div
-                style={{
-                  borderTop: "1px solid #ddd",
-                  paddingTop: "1rem",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  fontSize: "0.8rem",
-                  color: "#666",
-                }}
-              >
-                <div>
-                  נענה על ידי: <strong>{answer.user_name}</strong> (@
-                  {answer.user_nickname})
+            {answers.map((answer, index) => (
+              <div key={answer.id} className="card">
+                <div
+                  className="card-content"
+                  style={{
+                    whiteSpace: "pre-wrap",
+                    lineHeight: "1.6",
+                  }}
+                >
+                  {answer.content}
                 </div>
-                <div>{formatDate(answer.created_at)}</div>
+
+                <div className="card-footer">
+                  <div>
+                    נענה על ידי: <strong>{answer.user_name}</strong> (@
+                    {answer.user_nickname})
+                  </div>
+                  <div>{formatDate(answer.created_at)}</div>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </Layout>
   );
 }

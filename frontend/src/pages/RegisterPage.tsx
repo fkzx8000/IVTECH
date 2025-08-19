@@ -1,9 +1,9 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { registerSchema, type RegisterRequest } from "../schemas/userSchema";
 import { useRegisterMutation } from "../store/authApi";
-import styled from "styled-components";
+import Layout from "../components/Layout";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -20,38 +20,30 @@ export default function RegisterPage() {
   const onSubmit = async (data: RegisterRequest) => {
     try {
       await register(data).unwrap();
-      navigate("/"); // מעבר לדף הבית לאחר רשמה מוצלחת
+      navigate("/");
     } catch (err) {
       console.error("Registration failed:", err);
     }
   };
 
   return (
-    <>
+    <Layout showNavigation={false}>
       {error && (
-        <div
-          style={{
-            color: "red",
-            marginBottom: "1rem",
-            padding: "0.5rem",
-            border: "1px solid red",
-            borderRadius: "4px",
-            backgroundColor: "#ffe6e6",
-          }}
-        >
+        <div className="error-message" style={{ marginBottom: "1rem" }}>
           {"data" in error
             ? (error.data as any)?.message || "שגיאה בהרשמה"
             : "שגיאה בהרשמה"}
         </div>
       )}
+
       <form className="form" onSubmit={handleSubmit(onSubmit)}>
         <div className="title">
           דף הרשמה
           <br />
           <span>בוא לשאול שאלות, לקבל תשובות והכי חשוב להיות חלק מקהילה</span>
         </div>
+
         <div>
-          {" "}
           <input
             {...registerField("name")}
             placeholder="שם מלא"
@@ -64,13 +56,14 @@ export default function RegisterPage() {
             </span>
           )}
         </div>
+
         <div>
-          {" "}
           <input
             {...registerField("nickname")}
             placeholder="כינוי"
-            type="nickname"
+            type="text"
             className="input"
+            disabled={isLoading}
           />
           {errors.nickname && (
             <span style={{ color: "red", fontSize: "0.8rem" }}>
@@ -78,6 +71,7 @@ export default function RegisterPage() {
             </span>
           )}
         </div>
+
         <div>
           <input
             {...registerField("email")}
@@ -92,6 +86,7 @@ export default function RegisterPage() {
             </span>
           )}
         </div>
+
         <div>
           <input
             {...registerField("password")}
@@ -106,11 +101,11 @@ export default function RegisterPage() {
             </span>
           )}
         </div>
+
         <button className="button-confirm" type="submit" disabled={isLoading}>
-          {isLoading ? "נרשם..." : "הרשמות"} →
+          {isLoading ? "נרשם..." : "הרשמה"}
         </button>
 
-        {/* פוטר מוצמד לתחתית הטופס */}
         <div className="form-footer">
           <button
             type="button"
@@ -130,6 +125,6 @@ export default function RegisterPage() {
           </button>
         </div>
       </form>
-    </>
+    </Layout>
   );
 }

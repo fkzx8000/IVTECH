@@ -1,12 +1,24 @@
 :root {
   font-family: "Heebo", Arial, sans-serif;
-
-  display: flex;
-  justify-content: center; /* מרכז אופקית */
-  align-items: center; /* מרכז אנכית */
-  height: 100vh; /* תופס את כל גובה המסך */
-  background: #e6f3f7; /* רקע כללי אם תרצה */
   --color: #e1e1e1;
+  --input-focus: #323232;
+  --font-color: #100b0bff;
+  --font-color-sub: #1d1616ff;
+  --bg-color: #fffbde;
+  --bg-color2: beige;
+  --main-color: black;
+  --button-blue: #5cbdfd;
+  --button-green: #7adaa5;
+  --button-red: #ff6b6b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
   background-color: #f3f3f3;
   background-image: linear-gradient(
       0deg,
@@ -33,17 +45,18 @@
       transparent
     );
   background-size: 55px 55px;
+  min-height: 100vh;
 }
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* סגנונות לטפסים */
 .form {
-  --input-focus: #323232;
-  --font-color: #100b0bff;
-  --font-color-sub: #1d1616ff;
-  --bg-color: #fad691;
-  --bg-color2: beige;
-
-  --main-color: black;
-
-  width: 350px; /* קובע רוחב קבוע וסביר */
+  width: 350px;
   padding: 30px;
   background: lightblue;
   display: flex;
@@ -105,18 +118,6 @@
   cursor: pointer;
 }
 
-.button-secondary:active,
-.button-register:active,
-.button-confirm:active {
-  box-shadow: 0px 0px var(--main-color);
-  transform: translate(3px, 3px);
-}
-.form-footer {
-  margin-top: 0.9rem; /* מצמיד את האזור הזה לתחתית הטופס */
-  display: flex;
-  gap: 12px;
-  width: 100%;
-}
 .button-secondary,
 .button-register {
   width: 50%;
@@ -129,4 +130,235 @@
   font-weight: 600;
   color: var(--font-color);
   cursor: pointer;
+}
+
+.button-secondary:active,
+.button-register:active,
+.button-confirm:active {
+  box-shadow: 0px 0px var(--main-color);
+  transform: translate(3px, 3px);
+}
+
+.form-footer {
+  margin-top: 0.9rem;
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+/* סגנונות לדפים כלליים */
+.page-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.page-header {
+  background: lightblue;
+  border: 2px solid var(--main-color);
+  border-radius: 10px;
+  box-shadow: 4px 4px var(--main-color);
+  padding: 2rem;
+  text-align: center;
+  width: 100%;
+  max-width: 600px;
+}
+
+.page-title {
+  color: var(--font-color);
+  font-weight: 900;
+  font-size: 28px;
+  margin-bottom: 1rem;
+}
+
+.page-subtitle {
+  color: var(--font-color-sub);
+  font-weight: 600;
+  font-size: 16px;
+}
+
+/* סגנונות לכפתורים */
+.styled-button {
+  background: var(--bg-color);
+  font-family: "Heebo", Arial, sans-serif;
+  padding: 0.6em 1.3em;
+  font-weight: 900;
+  font-size: 16px;
+  border: 3px solid black;
+  border-radius: 0.4em;
+  box-shadow: 0.1em 0.1em;
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+  display: inline-block;
+  transition: all 0.1s ease;
+}
+.styled-button2 {
+  background: var(--bg-color);
+  font-family: "Heebo", Arial, sans-serif;
+  padding: 0.6em 1.3em;
+  font-weight: 900;
+  font-size: 16px;
+  border: 3px solid black;
+  border-radius: 0.4em;
+  box-shadow: 0.1em 0.1em;
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+  display: inline-block;
+  transition: all 0.1s ease;
+  margin-right: 1.4rem;
+}
+.styled-button:hover {
+  transform: translate(-0.05em, -0.05em);
+  box-shadow: 0.15em 0.15em;
+}
+
+.styled-button:active {
+  transform: translate(0.05em, 0.05em);
+  box-shadow: 0.05em 0.05em;
+}
+
+.styled-button.green {
+  background: var(--button-green);
+}
+
+.styled-button.red {
+  background: var(--button-red);
+}
+
+.styled-button.yellow {
+  background: var(--bg-color);
+}
+styled-button.needup {
+  margin-top: 0.5rem;
+}
+/* סגנונות לכרטיסים */
+.card {
+  background: lightblue;
+  border: 2px solid var(--main-color);
+  border-radius: 10px;
+  box-shadow: 4px 4px var(--main-color);
+  padding: 1.5rem;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.card-title {
+  color: var(--font-color);
+  font-weight: 900;
+  font-size: 20px;
+  margin-bottom: 1rem;
+}
+
+.card-content {
+  color: var(--font-color-sub);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.card-footer {
+  border-top: 2px solid var(--main-color);
+  padding-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: var(--font-color-sub);
+}
+
+/* סגנונות לטפסי יצירת תוכן */
+.content-form {
+  background: lightblue;
+  border: 2px solid var(--main-color);
+  border-radius: 10px;
+  box-shadow: 4px 4px var(--main-color);
+  padding: 2rem;
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  font-weight: 700;
+  color: var(--font-color);
+  font-size: 16px;
+}
+
+.form-textarea {
+  min-height: 120px;
+  resize: vertical;
+  padding: 10px;
+  border: 2px solid var(--main-color);
+  border-radius: 5px;
+  font-family: "Heebo", Arial, sans-serif;
+  font-size: 15px;
+  background-color: #e8f0fe;
+  box-shadow: 4px 4px var(--main-color);
+}
+
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--input-focus);
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background-color: #ffe6e6;
+  border: 1px solid red;
+  border-radius: 4px;
+}
+
+/* תגיות */
+.tag {
+  display: inline-block;
+  background: var(--bg-color);
+  color: var(--font-color);
+  padding: 0.25rem 0.75rem;
+  margin: 0.25rem 0.25rem 0.25rem 0;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 2px solid var(--main-color);
+  box-shadow: 2px 2px var(--main-color);
+}
+
+/* רספונסיביות */
+@media (max-width: 768px) {
+  .page-container {
+    padding: 1rem;
+  }
+
+  .form {
+    width: 95%;
+    max-width: 350px;
+  }
+
+  .card,
+  .content-form,
+  .page-header {
+    width: 95%;
+  }
+
+  .styled-button {
+    font-size: 14px;
+    padding: 0.5em 1em;
+  }
 }
