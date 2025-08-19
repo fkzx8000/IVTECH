@@ -1,5 +1,5 @@
-import { api } from "../../store/index";
-import { LoginRequest, RegisterRequest } from "../schemas/userSchema";
+import { api } from "./store";
+import type { LoginRequest, RegisterRequest } from "../schemas/userSchema";
 
 export interface User {
   id: number;
