@@ -1,5 +1,5 @@
-import express from "express";
 import cors from "cors";
+import express from "express";
 import { env } from "./config/env.js";
 import authRoutes from "./routes/auth.js";
 import { testConnection } from "./utils/database.js";
