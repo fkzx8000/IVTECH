@@ -1,23 +1,36 @@
-# משתמש ב-Node 18 Alpine לחיסכון במקום
-FROM node:18-alpine
+# שלב 1: Build
+FROM node:18-alpine AS builder
 
-# הגדרת תיקיית העבודה
 WORKDIR /app
 
-# העתקת package.json ו package-lock.json
+# העתקת package files
 COPY package*.json ./
 
-# התקנת dependencies
-RUN npm install --only=production
+# התקנת כל התלויות (כולל dev)
+RUN npm install
 
-# העתקת שאר הקוד
+# העתקת קוד מקור
 COPY . .
 
 # בניית הפרויקט
 RUN npm run build
 
-# חשיפת פורט 3001
-EXPOSE 3001
+# שלב 2: Production
+FROM node:18-alpine AS production
+
+WORKDIR /app
+
+# העתקת package files
+COPY package*.json ./
+
+# התקנת production dependencies בלבד
+RUN npm install --omit=dev
+
+# העתקת הקוד הבנוי משלב הבניה
+COPY --from=builder /app/dist ./dist
+
+# חשיפת פורט
+EXPOSE $PORT
 
 # הפעלת השרת
 CMD ["npm", "start"]
