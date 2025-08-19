@@ -95,16 +95,22 @@ export default function QuestionsPage() {
                 boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
               }}
             >
-              {/* כותרת השאלה */}
-              <h2
-                style={{
-                  margin: "0 0 1rem 0",
-                  color: "#333",
-                  fontSize: "1.4rem",
-                }}
+              {/* כותרת השאלה עם קישור */}
+              <Link
+                to={`/question/${question.id}`}
+                style={{ textDecoration: "none", color: "inherit" }}
               >
-                {question.title}
-              </h2>
+                <h2
+                  style={{
+                    margin: "0 0 1rem 0",
+                    color: "#007bff",
+                    fontSize: "1.4rem",
+                    cursor: "pointer",
+                  }}
+                >
+                  {question.title}
+                </h2>
+              </Link>
 
               {/* תוכן השאלה */}
               <div
@@ -115,7 +121,9 @@ export default function QuestionsPage() {
                   whiteSpace: "pre-wrap", // שומר על שבירות שורה
                 }}
               >
-                {question.content}
+                {question.content.length > 200
+                  ? question.content.substring(0, 200) + "..."
+                  : question.content}
               </div>
 
               {/* תגיות */}
@@ -141,7 +149,7 @@ export default function QuestionsPage() {
                 </div>
               )}
 
-              {/* מידע על המשתמש והתאריך */}
+              {/* מידע על המשתמש והתאריך + כפתור לצפייה */}
               <div
                 style={{
                   borderTop: "1px solid #ddd",
@@ -157,7 +165,26 @@ export default function QuestionsPage() {
                   נשאל על ידי: <strong>{question.user_name}</strong> (@
                   {question.user_nickname})
                 </div>
-                <div>{formatDate(question.created_at)}</div>
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: "1rem" }}
+                >
+                  <span>{formatDate(question.created_at)}</span>
+                  <Link to={`/question/${question.id}`}>
+                    <button
+                      style={{
+                        backgroundColor: "#007bff",
+                        color: "white",
+                        border: "none",
+                        padding: "0.5rem 1rem",
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                        fontSize: "0.8rem",
+                      }}
+                    >
+                      צפה בשאלה ובתשובות
+                    </button>
+                  </Link>
+                </div>
               </div>
             </div>
           ))}

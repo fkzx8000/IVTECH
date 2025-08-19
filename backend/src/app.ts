@@ -2,8 +2,9 @@ import cors from "cors";
 import express from "express";
 import { env } from "./config/env.js";
 import authRoutes from "./routes/auth.js";
-import { testConnection } from "./utils/database.js";
 import questionRoutes from "./routes/questions.js";
+import answerRoutes from "./routes/answers.js";
+import { testConnection } from "./utils/database.js";
 
 const app = express();
 const PORT = env.PORT;
@@ -20,8 +21,11 @@ app.get("/health", (req, res) => {
   });
 });
 
+// Routes
 app.use("/", authRoutes);
 app.use("/", questionRoutes);
+app.use("/", answerRoutes);
+
 // הפעלת השרת עם בדיקת חיבור לבסיס הנתונים
 const startServer = async () => {
   try {
