@@ -6,7 +6,7 @@ export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl:
       process.env.NODE_ENV === "production"
-        ? "https://YOUR-BACKEND-URL.railway.app/"
+        ? "ivthac-production.up.railway.app"
         : "http://localhost:3001/",
     prepareHeaders: (headers, { getState }) => {
       const token = localStorage.getItem("token");
