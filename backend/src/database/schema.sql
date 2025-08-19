@@ -1,19 +1,22 @@
-CREATE TABLE IF NOT EXISTS users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    nickname VARCHAR(255) NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    is_active BOOLEAN DEFAULT TRUE,
-    email_verified BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    last_login TIMESTAMP NULL,
-    
 
-    INDEX idx_email (email),
-    INDEX idx_created_at (created_at),
-    INDEX idx_is_active (is_active)
-);
-
-
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  `email_verified` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `last_login` timestamp NULL DEFAULT NULL,
+  `nickname` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD KEY `idx_email` (`email`),
+  ADD KEY `idx_created_at` (`created_at`),
+  ADD KEY `idx_is_active` (`is_active`);
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+COMMIT;
