@@ -3,6 +3,7 @@ import express from "express";
 import { env } from "./config/env.js";
 import authRoutes from "./routes/auth.js";
 import { testConnection } from "./utils/database.js";
+import questionRoutes from "./routes/questions.js";
 
 const app = express();
 const PORT = env.PORT;
@@ -20,7 +21,7 @@ app.get("/health", (req, res) => {
 });
 
 app.use("/", authRoutes);
-
+app.use("/", questionRoutes);
 // הפעלת השרת עם בדיקת חיבור לבסיס הנתונים
 const startServer = async () => {
   try {
