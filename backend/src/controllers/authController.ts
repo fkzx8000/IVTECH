@@ -1,8 +1,19 @@
 import { Request, Response } from "express";
-import bcrypt from "bcryptjs";
+import crypto from "crypto";
 import { db } from "../utils/database.js";
 import { signToken } from "../utils/jwt.js";
 import { registerSchema, loginSchema } from "../schemas/userSchema.js";
+
+// פונקציה להצפנת סיסמה עם SHA-512
+const hashPassword = (password: string): string => {
+  return crypto.createHash("sha512").update(password).digest("hex");
+};
+
+// פונקציה לבדיקת סיסמה
+const verifyPassword = (password: string, hashedPassword: string): boolean => {
+  const hash = crypto.createHash("sha512").update(password).digest("hex");
+  return hash === hashedPassword;
+};
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -18,6 +29,7 @@ export const register = async (req: Request, res: Response) => {
     if ((existingUser as any[]).length > 0) {
       return res.status(400).json({ message: "משתמש עם אימייל זה כבר קיים" });
     }
+
     const [existingUserNickname] = await (
       await db
     ).execute("SELECT id FROM users WHERE nickname = ?", [nickname]);
@@ -28,9 +40,8 @@ export const register = async (req: Request, res: Response) => {
         .json({ message: "משתמש עם כינוי כזה זה כבר קיים" });
     }
 
-    // הצפנת הסיסמה
-    const saltRounds = 12;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    // הצפנת הסיסמה עם SHA-512
+    const hashedPassword = hashPassword(password);
 
     // יצירת המשתמש בבסיס הנתונים
     const [result] = await (
@@ -87,8 +98,8 @@ export const login = async (req: Request, res: Response) => {
 
     const user = userArray[0];
 
-    // בדיקת הסיסמה
-    const isValidPassword = await bcrypt.compare(password, user.password);
+    // בדיקת הסיסמה עם SHA-512
+    const isValidPassword = verifyPassword(password, user.password);
     if (!isValidPassword) {
       return res.status(401).json({ message: "אימייל או סיסמה לא נכונים" });
     }
@@ -103,6 +114,7 @@ export const login = async (req: Request, res: Response) => {
         id: user.id,
         email: user.email,
         name: user.name,
+        nickname: user.nickname,
       },
     });
   } catch (error) {
