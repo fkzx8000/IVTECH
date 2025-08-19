@@ -5,6 +5,7 @@ export interface User {
   id: number;
   email: string;
   name: string;
+  nickname: string;
 }
 
 export interface AuthResponse {
@@ -48,7 +49,7 @@ export const authApi = api.injectEndpoints({
       },
     }),
     getProfile: builder.query<{ user: User }, void>({
-      query: () => "/auth/profile",
+      query: () => "/auth/userInfo",
       providesTags: ["User"],
     }),
     logout: builder.mutation<void, void>({

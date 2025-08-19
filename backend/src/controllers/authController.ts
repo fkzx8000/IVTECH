@@ -8,7 +8,7 @@ export const register = async (req: Request, res: Response) => {
   try {
     // ולידציה של הנתונים
     const validatedData = registerSchema.parse(req.body);
-    const { email, password, name } = validatedData;
+    const { email, password, name, nickname } = validatedData;
 
     // בדיקה אם המשתמש כבר קיים
     const [existingUser] = await (
@@ -17,6 +17,15 @@ export const register = async (req: Request, res: Response) => {
 
     if ((existingUser as any[]).length > 0) {
       return res.status(400).json({ message: "משתמש עם אימייל זה כבר קיים" });
+    }
+    const [existingUserNickname] = await (
+      await db
+    ).execute("SELECT id FROM users WHERE nickname = ?", [nickname]);
+
+    if ((existingUserNickname as any[]).length > 0) {
+      return res
+        .status(400)
+        .json({ message: "משתמש עם כינוי כזה זה כבר קיים" });
     }
 
     // הצפנת הסיסמה
@@ -27,8 +36,8 @@ export const register = async (req: Request, res: Response) => {
     const [result] = await (
       await db
     ).execute(
-      "INSERT INTO users (email, password, name, created_at) VALUES (?, ?, ?, NOW())",
-      [email, hashedPassword, name]
+      "INSERT INTO users (email, password, name, nickname, created_at) VALUES (?, ?, ?, ?, NOW())",
+      [email, hashedPassword, name, nickname]
     );
 
     const userId = (result as any).insertId;
@@ -43,6 +52,7 @@ export const register = async (req: Request, res: Response) => {
         id: userId,
         email,
         name,
+        nickname,
       },
     });
   } catch (error) {
@@ -65,9 +75,10 @@ export const login = async (req: Request, res: Response) => {
     // בדיקה אם המשתמש קיים
     const [users] = await (
       await db
-    ).execute("SELECT id, email, password, name FROM users WHERE email = ?", [
-      email,
-    ]);
+    ).execute(
+      "SELECT id, email, password, name, nickname FROM users WHERE email = ?",
+      [email]
+    );
 
     const userArray = users as any[];
     if (userArray.length === 0) {
@@ -111,9 +122,10 @@ export const getProfile = async (req: Request, res: Response) => {
 
     const [users] = await (
       await db
-    ).execute("SELECT id, email, name, created_at FROM users WHERE id = ?", [
-      userId,
-    ]);
+    ).execute(
+      "SELECT id, email, name, nickname, created_at FROM users WHERE id = ?",
+      [userId]
+    );
 
     const userArray = users as any[];
     if (userArray.length === 0) {

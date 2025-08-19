@@ -1,7 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-// API Slice עם RTK Query
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({

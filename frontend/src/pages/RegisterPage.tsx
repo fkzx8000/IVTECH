@@ -77,7 +77,19 @@ export default function RegisterPage() {
             </span>
           )}
         </div>
-
+        <div>
+          <input
+            {...registerField("nickname")}
+            placeholder="כינוי"
+            style={{ width: "100%", padding: "0.5rem" }}
+            disabled={isLoading}
+          />
+          {errors.nickname && (
+            <span style={{ color: "red", fontSize: "0.8rem" }}>
+              {errors.nickname.message}
+            </span>
+          )}
+        </div>
         <div>
           <input
             {...registerField("email")}
