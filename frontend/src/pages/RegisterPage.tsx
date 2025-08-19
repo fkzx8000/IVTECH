@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
 import { registerSchema, type RegisterRequest } from "../schemas/userSchema";
 import { useRegisterMutation } from "../store/authApi";
+import styled from "styled-components";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -26,18 +27,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        padding: "2rem",
-        maxWidth: "400px",
-        margin: "0 auto",
-      }}
-    >
-      <h1>הרשמה</h1>
-
+    <>
       {error && (
         <div
           style={{
@@ -54,21 +44,18 @@ export default function RegisterPage() {
             : "שגיאה בהרשמה"}
         </div>
       )}
-
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "1rem",
-          width: "100%",
-        }}
-      >
+      <form className="form" onSubmit={handleSubmit(onSubmit)}>
+        <div className="title">
+          דף הרשמה
+          <br />
+          <span>בוא לשאול שאלות, לקבל תשובות והכי חשוב להיות חלק מקהילה</span>
+        </div>
         <div>
+          {" "}
           <input
             {...registerField("name")}
             placeholder="שם מלא"
-            style={{ width: "100%", padding: "0.5rem" }}
+            className="input"
             disabled={isLoading}
           />
           {errors.name && (
@@ -78,11 +65,12 @@ export default function RegisterPage() {
           )}
         </div>
         <div>
+          {" "}
           <input
             {...registerField("nickname")}
             placeholder="כינוי"
-            style={{ width: "100%", padding: "0.5rem" }}
-            disabled={isLoading}
+            type="nickname"
+            className="input"
           />
           {errors.nickname && (
             <span style={{ color: "red", fontSize: "0.8rem" }}>
@@ -94,7 +82,8 @@ export default function RegisterPage() {
           <input
             {...registerField("email")}
             placeholder="אימייל"
-            style={{ width: "100%", padding: "0.5rem" }}
+            className="input"
+            type="email"
             disabled={isLoading}
           />
           {errors.email && (
@@ -103,13 +92,12 @@ export default function RegisterPage() {
             </span>
           )}
         </div>
-
         <div>
           <input
             {...registerField("password")}
             type="password"
+            className="input"
             placeholder="סיסמה"
-            style={{ width: "100%", padding: "0.5rem" }}
             disabled={isLoading}
           />
           {errors.password && (
@@ -118,24 +106,30 @@ export default function RegisterPage() {
             </span>
           )}
         </div>
-
-        <button
-          type="submit"
-          style={{ padding: "0.7rem" }}
-          disabled={isLoading}
-        >
-          {isLoading ? "נרשם..." : "הרשמה"}
+        <button className="button-confirm" type="submit" disabled={isLoading}>
+          {isLoading ? "נרשם..." : "הרשמות"} →
         </button>
-      </form>
 
-      <div style={{ marginTop: "1rem", textAlign: "center" }}>
-        <div>
-          כבר רשום? <Link to="/login">התחבר כאן</Link>
+        {/* פוטר מוצמד לתחתית הטופס */}
+        <div className="form-footer">
+          <button
+            type="button"
+            className="button-register"
+            onClick={() => navigate("/login")}
+          >
+            התחברות
+          </button>
+
+          <button
+            type="button"
+            className="button-secondary"
+            onClick={() => navigate("/")}
+            aria-label="חזרה לדף הבית"
+          >
+            חזרה לבית
+          </button>
         </div>
-        <div style={{ marginTop: "0.5rem" }}>
-          <Link to="/">חזרה לדף הבית</Link>
-        </div>
-      </div>
-    </div>
+      </form>
+    </>
   );
 }
