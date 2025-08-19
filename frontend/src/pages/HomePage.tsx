@@ -33,6 +33,8 @@ export default function HomePage() {
       {isLoggedIn && profileData ? (
         <div>
           <p>שלום {profileData.user.name}!</p>
+          <p>או שבכלל {profileData.user.nickname}!</p>
+
           <p>אימייל: {profileData.user.email}</p>
           <div style={{ marginTop: "2rem" }}>
             <button onClick={handleLogout} style={{ marginRight: "1rem" }}>
