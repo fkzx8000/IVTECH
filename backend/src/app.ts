@@ -9,17 +9,22 @@ import { testConnection } from "./utils/database.js";
 const app = express();
 const PORT = env.PORT;
 
-// Middleware
+// CORS configuration - תיקון מלא
 app.use(
   cors({
     origin: [
-      "http://localhost:5173", // לפיתוח מקומי
-      "http://localhost:3000", // לפיתוח מקומי
-      "https://http://discerning-energy-production.up.railway.app", // החלף עם ה-URL של הFrontend
+      "http://localhost:5173",
+      "http://localhost:3000",
+      "https://discerning-energy-production.up.railway.app", // ה-URL של הfrontend שלך
+      "https://*.up.railway.app", // כל subdomain של railway
     ],
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "authorization"],
   })
 );
+
+// Middleware
 app.use(express.json());
 
 // Health check
