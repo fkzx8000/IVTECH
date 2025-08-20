@@ -80,13 +80,24 @@ export const register = async (req: Request, res: Response) => {
         nickname,
       },
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("❌ Register error:", error);
-    console.error("Error details:", {
-      name: error.name,
-      message: error.message,
-      stack: error.stack,
-    });
+
+    // Type guard לTypeScript
+    const errorDetails =
+      error instanceof Error
+        ? {
+            name: error.name,
+            message: error.message,
+            stack: error.stack,
+          }
+        : {
+            name: "Unknown",
+            message: String(error),
+            stack: undefined,
+          };
+
+    console.error("Error details:", errorDetails);
 
     if (error instanceof Error && error.name === "ZodError") {
       console.log("❌ Validation error:", error);
@@ -97,7 +108,10 @@ export const register = async (req: Request, res: Response) => {
 
     res.status(500).json({
       message: "שגיאת שרת פנימית",
-      error: process.env.NODE_ENV === "development" ? error.message : undefined,
+      error:
+        process.env.NODE_ENV === "development"
+          ? errorDetails.message
+          : undefined,
     });
   }
 };
@@ -145,7 +159,7 @@ export const login = async (req: Request, res: Response) => {
         nickname: user.nickname,
       },
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("❌ Login error:", error);
     if (error instanceof Error && error.name === "ZodError") {
       return res
@@ -172,7 +186,7 @@ export const getProfile = async (req: Request, res: Response) => {
 
     const user = userArray[0];
     res.json({ user });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Get profile error:", error);
     res.status(500).json({ message: "שגיאת שרת פנימית" });
   }
