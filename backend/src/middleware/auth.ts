@@ -8,7 +8,7 @@ interface AuthenticatedRequest extends Request {
   };
 }
 
-export const authenticateToken = async (
+export const authenticateToken = (
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
@@ -24,7 +24,7 @@ export const authenticateToken = async (
       return res.status(401).json({ message: "אין טוקן אימות" });
     }
 
-    const payload = await verifyToken(token);
+    const payload = verifyToken(token);
     req.user = {
       userId: payload.userId as number,
       email: payload.email as string,

@@ -17,46 +17,59 @@ const verifyPassword = (password: string, hashedPassword: string): boolean => {
 
 export const register = async (req: Request, res: Response) => {
   try {
+    console.log("📝 Register request received:", { body: req.body });
+
     // ולידציה של הנתונים
     const validatedData = registerSchema.parse(req.body);
     const { email, password, name, nickname } = validatedData;
 
+    console.log("✅ Data validated successfully");
+
     // בדיקה אם המשתמש כבר קיים (אימייל)
+    console.log("🔍 Checking if user exists with email:", email);
     const [existingUser] = await db.execute(
       "SELECT id FROM users WHERE email = ?",
       [email]
     );
 
     if ((existingUser as any[]).length > 0) {
+      console.log("❌ User already exists with email:", email);
       return res.status(400).json({ message: "משתמש עם אימייל זה כבר קיים" });
     }
 
     // בדיקה אם המשתמש כבר קיים (כינוי)
+    console.log("🔍 Checking if user exists with nickname:", nickname);
     const [existingUserNickname] = await db.execute(
       "SELECT id FROM users WHERE nickname = ?",
       [nickname]
     );
 
     if ((existingUserNickname as any[]).length > 0) {
+      console.log("❌ User already exists with nickname:", nickname);
       return res
         .status(400)
         .json({ message: "משתמש עם כינוי כזה זה כבר קיים" });
     }
 
     // הצפנת הסיסמה עם SHA-512
+    console.log("🔐 Hashing password...");
     const hashedPassword = hashPassword(password);
 
     // יצירת המשתמש בבסיס הנתונים
+    console.log("💾 Creating user in database...");
     const [result] = await db.execute(
       "INSERT INTO users (email, password, name, nickname, created_at) VALUES (?, ?, ?, ?, NOW())",
       [email, hashedPassword, name, nickname]
     );
 
     const userId = (result as any).insertId;
+    console.log("✅ User created with ID:", userId);
 
     // יצירת JWT
-    const token = await signToken({ userId, email });
+    console.log("🔑 Creating JWT token...");
+    const token = signToken({ userId, email });
 
+    console.log("🎉 Registration successful for:", email);
     res.status(201).json({
       message: "משתמש נוצר בהצלחה",
       token,
@@ -68,18 +81,31 @@ export const register = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    console.error("Register error:", error);
+    console.error("❌ Register error:", error);
+    console.error("Error details:", {
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+    });
+
     if (error instanceof Error && error.name === "ZodError") {
+      console.log("❌ Validation error:", error);
       return res
         .status(400)
         .json({ message: "נתונים לא תקינים", errors: error });
     }
-    res.status(500).json({ message: "שגיאת שרת פנימית" });
+
+    res.status(500).json({
+      message: "שגיאת שרת פנימית",
+      error: process.env.NODE_ENV === "development" ? error.message : undefined,
+    });
   }
 };
 
 export const login = async (req: Request, res: Response) => {
   try {
+    console.log("🔑 Login request received for:", req.body.email);
+
     // ולידציה של הנתונים
     const validatedData = loginSchema.parse(req.body);
     const { email, password } = validatedData;
@@ -92,6 +118,7 @@ export const login = async (req: Request, res: Response) => {
 
     const userArray = users as any[];
     if (userArray.length === 0) {
+      console.log("❌ Login failed - user not found:", email);
       return res.status(401).json({ message: "אימייל או סיסמה לא נכונים" });
     }
 
@@ -100,12 +127,14 @@ export const login = async (req: Request, res: Response) => {
     // בדיקת הסיסמה עם SHA-512
     const isValidPassword = verifyPassword(password, user.password);
     if (!isValidPassword) {
+      console.log("❌ Login failed - invalid password for:", email);
       return res.status(401).json({ message: "אימייל או סיסמה לא נכונים" });
     }
 
     // יצירת JWT
-    const token = await signToken({ userId: user.id, email: user.email });
+    const token = signToken({ userId: user.id, email: user.email });
 
+    console.log("✅ Login successful for:", email);
     res.json({
       message: "התחברות בוצעה בהצלחה",
       token,
@@ -117,7 +146,7 @@ export const login = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    console.error("Login error:", error);
+    console.error("❌ Login error:", error);
     if (error instanceof Error && error.name === "ZodError") {
       return res
         .status(400)

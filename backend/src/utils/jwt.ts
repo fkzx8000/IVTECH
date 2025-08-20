@@ -1,17 +1,17 @@
-import { SignJWT, jwtVerify } from "jose";
+import jwt from "jsonwebtoken";
 import { env } from "../config/env.js";
 
-const secret = new TextEncoder().encode(env.JWT_SECRET);
-
-export async function signToken(payload: any) {
-  return await new SignJWT(payload)
-    .setProtectedHeader({ alg: "HS256" })
-    .setExpirationTime("1h")
-    .setIssuedAt()
-    .sign(secret);
+export function signToken(payload: any): string {
+  return jwt.sign(payload, env.JWT_SECRET, {
+    expiresIn: "1h",
+    algorithm: "HS256",
+  });
 }
 
-export async function verifyToken(token: string) {
-  const { payload } = await jwtVerify(token, secret);
-  return payload;
+export function verifyToken(token: string): any {
+  try {
+    return jwt.verify(token, env.JWT_SECRET);
+  } catch (error) {
+    throw new Error("Invalid token");
+  }
 }
