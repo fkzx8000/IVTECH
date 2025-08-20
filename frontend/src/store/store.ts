@@ -2,11 +2,11 @@ import { configureStore } from "@reduxjs/toolkit";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const api = createApi({
-  reducerPath: "",
+  reducerPath: "api",
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.PROD
-      ? "/" // בproduction ה-frontend והbackend באותו דומיין
-      : "http://localhost:3001/", // בdevelopment עדיין צריך לפנות לbackend port
+      ? "https://ivthac-production-a027.up.railway.app/"
+      : "http://localhost:3001/",
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("token");
       if (token) {
