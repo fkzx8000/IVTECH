@@ -27,7 +27,6 @@ export const authApi = api.injectEndpoints({
           const { data } = await queryFulfilled;
           localStorage.setItem("token", data.token);
           localStorage.setItem("user", JSON.stringify(data.user));
-          // הניווט יטופל ברכיב עצמו
         } catch (error) {
           console.error("Login failed:", error);
         }
@@ -44,7 +43,6 @@ export const authApi = api.injectEndpoints({
           const { data } = await queryFulfilled;
           localStorage.setItem("token", data.token);
           localStorage.setItem("user", JSON.stringify(data.user));
-          // הניווט יטופל ברכיב עצמו
         } catch (error) {
           console.error("Registration failed:", error);
         }

@@ -39,7 +39,6 @@ export default function QuestionsPage() {
 
   const questions = questionsData?.questions || [];
 
-  // פונקציה לעיצוב תאריך
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("he-IL", {
@@ -51,7 +50,6 @@ export default function QuestionsPage() {
     });
   };
 
-  // פונקציה לעיצוב תגיות
   const formatTags = (tags: string) => {
     if (!tags || tags.trim() === "") return null;
 
@@ -106,7 +104,6 @@ export default function QuestionsPage() {
           >
             {questions.map((question) => (
               <div key={question.id} className="card">
-                {/* כותרת השאלה עם קישור */}
                 <Link
                   to={`/question/${question.id}`}
                   style={{ textDecoration: "none", color: "inherit" }}
@@ -125,14 +122,12 @@ export default function QuestionsPage() {
                   </div>
                 </Link>
 
-                {/* תוכן השאלה */}
                 <div className="card-content">
                   {question.content.length > 200
                     ? question.content.substring(0, 200) + "..."
                     : question.content}
                 </div>
 
-                {/* תגיות */}
                 {formatTags(question.tags) && (
                   <div style={{ marginBottom: "1rem" }}>
                     {formatTags(question.tags)!.map((tag, index) => (
@@ -142,8 +137,6 @@ export default function QuestionsPage() {
                     ))}
                   </div>
                 )}
-
-                {/* מידע על המשתמש והתאריך + כפתור לצפייה */}
                 <div className="card-footer">
                   <div>
                     נשאל על ידי: <strong>{question.user_name}</strong> (@

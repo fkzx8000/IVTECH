@@ -14,12 +14,10 @@ export const createAnswer = async (
   res: Response
 ) => {
   try {
-    // ולידציה של הנתונים
     const validatedData = createAnswerSchema.parse(req.body);
     const { content, question_id } = validatedData;
     const userId = req.user!.userId;
 
-    // בדיקה שהשאלה קיימת
     const [questionCheck] = await db.execute(
       "SELECT id FROM questions WHERE id = ?",
       [question_id]
@@ -29,7 +27,6 @@ export const createAnswer = async (
       return res.status(404).json({ message: "שאלה לא נמצאה" });
     }
 
-    // יצירת התשובה במסד הנתונים
     const [result] = await db.execute(
       "INSERT INTO answers (content, question_id, user_id, created_at) VALUES (?, ?, ?, NOW())",
       [content, question_id, userId]
@@ -37,7 +34,6 @@ export const createAnswer = async (
 
     const answerId = (result as any).insertId;
 
-    // החזרת התשובה שנוצרה
     const [answerData] = await db.execute(
       `
       SELECT 
@@ -75,7 +71,6 @@ export const getQuestionAnswers = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "מזהה שאלה לא תקין" });
     }
 
-    // בדיקה שהשאלה קיימת
     const [questionCheck] = await db.execute(
       "SELECT id, title FROM questions WHERE id = ?",
       [questionId]
@@ -85,7 +80,6 @@ export const getQuestionAnswers = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "שאלה לא נמצאה" });
     }
 
-    // קבלת כל התשובות לשאלה עם פרטי המשתמש
     const [answers] = await db.execute(
       `
       SELECT 
@@ -117,7 +111,6 @@ export const getQuestionWithAnswers = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "מזהה שאלה לא תקין" });
     }
 
-    // קבלת השאלה עם פרטי המשתמש
     const [questionData] = await db.execute(
       `
       SELECT 
@@ -134,7 +127,6 @@ export const getQuestionWithAnswers = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "שאלה לא נמצאה" });
     }
 
-    // קבלת כל התשובות לשאלה
     const [answers] = await db.execute(
       `
       SELECT 

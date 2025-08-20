@@ -38,7 +38,6 @@ export default function QuestionDetailPage() {
 
   const isLoggedIn = !!localStorage.getItem("token");
 
-  // פונקציה לעיצוב תאריך
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("he-IL", {
@@ -50,7 +49,6 @@ export default function QuestionDetailPage() {
     });
   };
 
-  // פונקציה לעיצוב תגיות
   const formatTags = (tags: string) => {
     if (!tags || tags.trim() === "") return null;
 
@@ -145,7 +143,6 @@ export default function QuestionDetailPage() {
   return (
     <Layout>
       <div className="page-container">
-        {/* השאלה */}
         <div className="card" style={{ border: "3px solid #007bff" }}>
           <h1
             className="card-title"
@@ -165,7 +162,6 @@ export default function QuestionDetailPage() {
             {question.content}
           </div>
 
-          {/* תגיות */}
           {formatTags(question.tags) && (
             <div style={{ margin: "1rem 0" }}>
               {formatTags(question.tags)!.map((tag, index) => (
@@ -176,7 +172,6 @@ export default function QuestionDetailPage() {
             </div>
           )}
 
-          {/* מידע על המשתמש והתאריך */}
           <div className="card-footer">
             <div>
               נשאל על ידי: <strong>{question.user_name}</strong> (@
@@ -186,12 +181,10 @@ export default function QuestionDetailPage() {
           </div>
         </div>
 
-        {/* כותרת התשובות */}
         <div className="page-header" style={{ marginTop: "2rem" }}>
           <h2 className="page-title">תשובות ({answers.length})</h2>
         </div>
 
-        {/* טופס הוספת תשובה */}
         {isLoggedIn ? (
           <div className="content-form">
             <h3 style={{ margin: "0 0 0 0", color: "var(--font-color)" }}>
@@ -247,8 +240,6 @@ export default function QuestionDetailPage() {
             </div>
           </div>
         )}
-
-        {/* רשימת התשובות */}
         {answers.length === 0 ? (
           <div className="card">
             <div className="card-content" style={{ textAlign: "center" }}>

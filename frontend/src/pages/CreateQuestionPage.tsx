@@ -8,7 +8,6 @@ import {
 import { useCreateQuestionMutation } from "../store/questionsApi";
 import Layout from "../components/Layout";
 
-// Form data type for react-hook-form
 interface FormData {
   title: string;
   content: string;

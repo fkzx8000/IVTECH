@@ -4,11 +4,9 @@ import { authenticateToken } from "../middleware/auth.js";
 
 const router = Router();
 
-// Public routes
 router.post("/register", register);
 router.post("/login", login);
 
-// Protected routes
 router.get("/userInfo", authenticateToken, getProfile);
 
 export default router;

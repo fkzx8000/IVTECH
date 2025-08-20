@@ -5,7 +5,7 @@ export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.PROD
-      ? "https://ivthac-production-a027.up.railway.app/" // ה-URL הנכון של הbackend שלך
+      ? "https://ivthac-production-a027.up.railway.app/"
       : "http://localhost:3001/",
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("token");

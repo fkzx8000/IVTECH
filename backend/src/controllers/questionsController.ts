@@ -14,20 +14,16 @@ export const createQuestion = async (
   res: Response
 ) => {
   try {
-    // ולידציה של הנתונים
     const validatedData = createQuestionSchema.parse(req.body);
     const { title, content, tags } = validatedData;
     const userId = req.user!.userId;
 
-    // יצירת השאלה במסד הנתונים
     const [result] = await db.execute(
       "INSERT INTO questions (title, content, tags, user_id, created_at) VALUES (?, ?, ?, ?, NOW())",
       [title, content, tags, userId]
     );
 
     const questionId = (result as any).insertId;
-
-    // החזרת השאלה שנוצרה
     const [questionData] = await db.execute(
       `
       SELECT 
@@ -59,7 +55,6 @@ export const createQuestion = async (
 
 export const getQuestions = async (req: Request, res: Response) => {
   try {
-    // קבלת כל השאלות עם פרטי המשתמש
     const [questions] = await db.execute(`
       SELECT 
         q.id, q.title, q.content, q.tags, q.user_id, q.created_at, q.updated_at,
