@@ -31,7 +31,6 @@ const StyledWrapper = styled.div`
     padding-top: 2rem;
   }
 
-  /* וידוא שהתוכן לא יוסתר מתחת ל-navbar */
   .main-content {
     padding-bottom: 80px;
   }
