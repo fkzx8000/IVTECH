@@ -4,7 +4,7 @@ export const createQuestionSchema = z.object({
   title: z
     .string()
     .min(5, "כותרת חייבת להכיל לפחות 5 תווים")
-    .max(255, "כותרת ארוכה מדי"),
+    .max(255, "כותרת ארוכה מדי (מקסימום 255 תווים)"),
   content: z.string().min(10, "תוכן השאלה חייב להכיל לפחות 10 תווים"),
   tags: z.string().optional().default(""),
 });
